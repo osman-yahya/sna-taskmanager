@@ -44,6 +44,13 @@ class LoginView(APIView):
         else:
             return Response({'message': 'Geçersiz kimlik bilgileri'}, status=400)
 
+class GetCredentials(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+
 class SignupView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)

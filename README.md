@@ -123,6 +123,11 @@
 
 **Note:** Requires Manager Role
 
+### Get User Itself
+**Endpoint:** `/api/users/get`
+
+**Method:** `GET`
+
 ---
 
 ## Admin Credentials
