@@ -38,8 +38,8 @@ class LoginView(APIView):
                 'user_id': user.id,
                 'email': user.email,
             })
-            response.set_cookie('access_token', access_token, httponly=True, secure=False, samesite='None')
-            response.set_cookie('refresh_token', refresh_token, httponly=True, secure=False, samesite='None')
+            response.set_cookie('access_token', access_token, httponly=False, secure=False, samesite='None')
+            response.set_cookie('refresh_token', refresh_token, httponly=False, secure=False, samesite='None')
             return response
         else:
             return Response({'message': 'Geçersiz kimlik bilgileri'}, status=400)
