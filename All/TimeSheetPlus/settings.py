@@ -194,3 +194,10 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "https://your-frontend-domain.com",
 ]
+
+SESSION_COOKIE_SECURE = False  # HTTPS gerekmesin (Canlıda True yap)
+SESSION_COOKIE_HTTPONLY = True  # JavaScript erişemesin
+SESSION_COOKIE_SAMESITE = "None"  # Çapraz site istekleri için gerekli
+
+CSRF_COOKIE_SECURE = False  # HTTPS gerekmesin
+CSRF_COOKIE_SAMESITE = "None"  # Çapraz site istekleri için gerekli
