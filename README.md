@@ -126,7 +126,7 @@
 ### Get User Itself
 **Endpoint:** `/api/users/get`
 
-**Method:** `GET`
+**Method:** `POST`
 
 ---
 
