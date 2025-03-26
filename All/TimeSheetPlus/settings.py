@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "usersMd",
     'rest_framework',
     'rest_framework_simplejwt',
+    'corsheaders',
 
 ]
 
@@ -58,6 +59,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "usersMd.backend.JWTCookieMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = "TimeSheetPlus.urls"
@@ -181,3 +183,6 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
