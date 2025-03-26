@@ -119,13 +119,19 @@ class GetAllWorks(APIView):
     permission_classes = [IsAuthenticated, IsManager]
 
     def post(self, request):
-        
         filter_params = {}
-        if (wanted_user := request.data.get("wanted_user")) is not None:
+
+        # Boş stringler yerine None kontrolü eklenmiş
+        wanted_user = request.data.get("wanted_user")
+        if wanted_user and wanted_user != "":
             filter_params["user"] = wanted_user
-        if (wanted_company := request.data.get("wanted_company")) is not None:
+
+        wanted_company = request.data.get("wanted_company")
+        if wanted_company and wanted_company != "":
             filter_params["company"] = wanted_company
-        if (wanted_date := request.data.get("wanted_date")) is not None:
+
+        wanted_date = request.data.get("wanted_date")
+        if wanted_date and wanted_date != "":
             filter_params["date"] = wanted_date
 
         try:
@@ -134,7 +140,7 @@ class GetAllWorks(APIView):
             return Response(serializer.data)
         except Exception as e:
             return Response({"message": f"Error occurred: {e}"}, status=500)
-              
+
 class GetAllUsers(APIView):
     permission_classes = [IsAuthenticated, IsManager]
 
