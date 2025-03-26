@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate
 from rest_framework import status
 from .serializers import UserSerializer, WorkSerializer
 from .models import Work,User
-
+from django.conf import settings
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -63,11 +63,9 @@ class LoginView(APIView):
         else:
             return Response({'message': 'Geçersiz kimlik bilgileri'}, status=400)
 class GetCredentials(APIView):
-    
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        print(request.COOKIES)
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
 

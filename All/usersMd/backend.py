@@ -18,19 +18,19 @@ class EmailBackend(BaseBackend):
         except UserModel.DoesNotExist:
             return None
         
-
-from datetime import datetime, timedelta
-from django.utils.timezone import now
 from django.conf import settings
+from django.utils.timezone import now
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class JWTCookieMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
+        # AUTH_COOKIE'yi settings'ten al
+        self.auth_cookie_name = getattr(settings, 'SIMPLE_JWT', {}).get('AUTH_COOKIE', 'access_token')
 
     def __call__(self, request):
         # Çerezlerden access token'ı al ve Authorization header'a ekle
-        access_token = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE'])
+        access_token = request.COOKIES.get(self.auth_cookie_name)
         if access_token:
             request.META['HTTP_AUTHORIZATION'] = f'Bearer {access_token}'
 

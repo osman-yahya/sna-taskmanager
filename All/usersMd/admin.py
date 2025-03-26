@@ -14,7 +14,7 @@ class CompaniesAdmin(admin.ModelAdmin):
 
 # Work Model için Admin
 class WorkAdmin(admin.ModelAdmin):
-    list_display = ('user', 'company', 'work_hour', 'date','about')
+    list_display = ('id','user', 'company', 'work_hour', 'date','about')
     list_filter = ('user', 'company', 'date')
     search_fields = ('user__username', 'company__name')
 
