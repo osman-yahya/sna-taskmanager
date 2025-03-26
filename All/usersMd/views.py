@@ -84,7 +84,7 @@ class DeleteWork(APIView):
 
         try:
             work = Work.objects.get(id = request.data.get("id"))
-            if not work or work is "" :
+            if not work or work == "" :
                 return Response({"message" : "please specify the id of the work to be deleted as 'id' : 5;"},status=400)
             if work.user == request.user : 
                 work.delete()
@@ -100,7 +100,7 @@ class DeleteWorkasManager(APIView):
         try:
 
             work = Work.objects.get(id = request.data.get("id"))
-            if not work or work is "" :
+            if not work or work == "" :
                 return Response({"message" : "please specify the id of the work to be deleted as 'id' : 5;"},status=400)
             work.delete()
             return Response({"message" : "deleted"})
