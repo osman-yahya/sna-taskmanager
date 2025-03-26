@@ -171,6 +171,7 @@ SIMPLE_JWT = {
     'ISSUER': None,
 
     'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_COOKIE': 'access_token',
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
 
@@ -185,16 +186,11 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ALL_ORIGINS = False  # Güvenlik için False bırak
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # React Geliştirme Ortamı
     "https://yourfrontenddomain.com",  # Yayındaki domainin
 ]
-
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
-    "https://yourfrontenddomain.com",
-]
+CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS.copy()
 
 SESSION_COOKIE_SAMESITE = "None"
 SESSION_COOKIE_SECURE = True  # HTTPS kullanıyorsan True olmalı
