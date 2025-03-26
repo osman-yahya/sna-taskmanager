@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -59,7 +60,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "usersMd.backend.JWTCookieMiddleware",
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = "TimeSheetPlus.urls"
@@ -185,19 +185,21 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = False  # Güvenlik için False bırak
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # React geliştirme ortamı
-    "https://your-frontend-domain.com",  # Canlı domain
+    "http://localhost:5173",  # React Geliştirme Ortamı
+    "https://yourfrontenddomain.com",  # Yayındaki domainin
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
-    "https://your-frontend-domain.com",
+    "https://yourfrontenddomain.com",
 ]
 
-SESSION_COOKIE_SECURE = False  # HTTPS gerekmesin (Canlıda True yap)
-SESSION_COOKIE_HTTPONLY = True  # JavaScript erişemesin
-SESSION_COOKIE_SAMESITE = "None"  # Çapraz site istekleri için gerekli
+SESSION_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SECURE = True  # HTTPS kullanıyorsan True olmalı
+CSRF_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SECURE = True  # HTTPS zorunlu
 
-CSRF_COOKIE_SECURE = False  # HTTPS gerekmesin
-CSRF_COOKIE_SAMESITE = "None"  # Çapraz site istekleri için gerekli
+CSRF_COOKIE_HTTPONLY = False  # React'ın cookie'ye erişimi için
+SESSION_COOKIE_HTTPONLY = True
