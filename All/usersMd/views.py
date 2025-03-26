@@ -38,12 +38,30 @@ class LoginView(APIView):
                 'user_id': user.id,
                 'email': user.email,
             })
-            response.set_cookie('access_token', access_token, httponly=False, secure=False, samesite='None' , domain='https://sna-taskmanager.onrender.com' , max_age=60*60*24*60)
-            response.set_cookie('refresh_token', refresh_token, httponly=False, secure=False, samesite='None' , domain='https://sna-taskmanager.onrender.com' , max_age=60*60*24*60)
+
+            # Access Token Çerez Ayarı
+            response.set_cookie(
+                key=settings.SIMPLE_JWT['AUTH_COOKIE'],
+                value=access_token,
+                httponly=True,   # JS erişemesin
+                secure=True,     # HTTPS için True olmalı
+                samesite='None', # CORS için gerekli
+                max_age=60*60*24*60
+            )
+
+            # Refresh Token Çerez Ayarı
+            response.set_cookie(
+                key="refresh_token",
+                value=refresh_token,
+                httponly=True,
+                secure=True,
+                samesite='None',
+                max_age=60*60*24*60
+            )
+
             return response
         else:
             return Response({'message': 'Geçersiz kimlik bilgileri'}, status=400)
-
 class GetCredentials(APIView):
     
     permission_classes = [IsAuthenticated]

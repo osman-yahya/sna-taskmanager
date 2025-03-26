@@ -19,12 +19,46 @@ class EmailBackend(BaseBackend):
             return None
         
 
+from datetime import datetime, timedelta
+from django.utils.timezone import now
+from django.conf import settings
+from rest_framework_simplejwt.tokens import RefreshToken
+
 class JWTCookieMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
-        access_token = request.COOKIES.get('access_token')
+        # Çerezlerden access token'ı al ve Authorization header'a ekle
+        access_token = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE'])
         if access_token:
             request.META['HTTP_AUTHORIZATION'] = f'Bearer {access_token}'
-        return self.get_response(request)
+
+        response = self.get_response(request)
+
+        # Eğer kullanıcı giriş yapmışsa yeni token üret ve çerezlere ekle
+        if hasattr(request, "user") and request.user.is_authenticated:
+            refresh = RefreshToken.for_user(request.user)
+            access_token = str(refresh.access_token)
+
+            # Access token'ı çereze yaz
+            response.set_cookie(
+                key=settings.SIMPLE_JWT['AUTH_COOKIE'],
+                value=access_token,
+                expires=now() + settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
+                secure=True,  # HTTPS için True olmalı
+                httponly=True,  # JS erişemesin
+                samesite="None"
+            )
+            
+            # Refresh token'ı çereze yaz
+            response.set_cookie(
+                key="refresh_token",
+                value=str(refresh),
+                expires=now() + settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'],
+                secure=True,
+                httponly=True,
+                samesite="None"
+            )
+
+        return response
