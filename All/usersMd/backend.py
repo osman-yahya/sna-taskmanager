@@ -36,7 +36,74 @@ class JWTCookieMiddleware:
 
         response = self.get_response(request)
 
+        # Kullanıcı anonimse yeni token üretme
+        if request.user is None or not request.user.is_authenticated:
+            return response
+
+        # Eğer kullanıcının oturumu açıksa yeni token oluştur
+        refresh = RefreshToken.for_user(request.user)
+        access_token = str(refresh.access_token)
+
+        # Access token'ı çereze yaz
+        response.set_cookie(
+            key=settings.SIMPLE_JWT['AUTH_COOKIE'],
+            value=access_token,
+            expires=now() + settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
+            secure=True,  # HTTPS için True olmalı
+            httponly=True,  # JS erişemesin
+            samesite="None"
+        )
+
+        # Refresh token'ı çereze yaz
+        response.set_cookie(
+            key="refresh_token",
+            value=str(refresh),
+            expires=now() + settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'],
+            secure=True,
+            httponly=True,
+            samesite="None"
+        )
+
+        return response
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+""" class JWTCookieMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+        # AUTH_COOKIE'yi settings'ten al
+        self.auth_cookie_name = getattr(settings, 'SIMPLE_JWT', {}).get('AUTH_COOKIE', 'access_token')
+
+    def __call__(self, request):
+        # Çerezlerden access token'ı al ve Authorization header'a ekle
+        access_token = request.COOKIES.get(self.auth_cookie_name)
+        if access_token:
+            request.META['HTTP_AUTHORIZATION'] = f'Bearer {access_token}'
+
+        response = self.get_response(request)
+
         # Eğer kullanıcı giriş yapmışsa yeni token üret ve çerezlere ekle
+        print(request.user)
+        if request.user == None:
+            return response
+        if request.logout == True:
+            response.delete_cookie('access_token', path='/')
+            response.delete_cookie('refresh_token', path='/')
+            
         if hasattr(request, "user") and request.user.is_authenticated:
             refresh = RefreshToken.for_user(request.user)
             access_token = str(refresh.access_token)
@@ -62,3 +129,4 @@ class JWTCookieMiddleware:
             )
 
         return response
+ """

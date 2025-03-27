@@ -11,6 +11,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
+from datetime import datetime
+from django.utils.timezone import now
 
 from rest_framework.permissions import IsAuthenticated, BasePermission
 class IsManager(BasePermission):
@@ -77,17 +79,48 @@ class SignupView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+
 class SignoutView(APIView):
     def post(self, request):
-        # Çerezlerden JWT tokenlarını temizle
+        # Çıkış işlemi için yanıt oluştur
         response = Response({'message': 'Çıkış Yapıldı'})
-        
-        # Çerezleri temizleme
-        response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE'])
-        response.delete_cookie("refresh_token")
-        
-        # Çıkış işlemi tamamlandı
+
+        # Çerezleri silme işlemi (her iki yöntemle silme)
+        response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE'], path='/')
+        response.delete_cookie('access_token', path='/')
+        response.delete_cookie('refresh_token', path='/')
+        response.delete_cookie('csrftoken', path='/')
+        response.delete_cookie('sessionid', path='/')
+
+        # Çerezlerin süresini geçmiş bir tarihe ayarlayarak silme işlemi
+        response.set_cookie(
+            key=settings.SIMPLE_JWT['AUTH_COOKIE'],
+            value="",
+            expires=now() ,
+            secure=True,  # HTTPS için True olmalı
+            httponly=True,  # JS erişemesin
+            samesite="None"
+        )
+
+        # Refresh token'ı çereze yaz
+        response.set_cookie(
+            key="refresh_token",
+            value="",
+            expires=now() ,
+            secure=True,
+            httponly=True,
+            samesite="None"
+        )
+
+        # Kullanıcıyı anonim yaparak middleware'e engel olun
+        request.user = None  # Kullanıcıyı anonim yapıyoruz
+
+        # Authorization header'ı temizleyin, eski token'ların gönderilmesini engelleyin
+        response["Authorization"] = "Bearer "  # Auth header'ı temizliyoruz
+
         return response
+
+
 
     
 class CreateWork(APIView):
