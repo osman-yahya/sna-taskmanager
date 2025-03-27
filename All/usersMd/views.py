@@ -79,9 +79,16 @@ class SignupView(APIView):
     
 class SignoutView(APIView):
     def post(self, request):
+        # Çerezlerden JWT tokenlarını temizle
         response = Response({'message': 'Çıkış Yapıldı'})
-        response.cookies.clear()
+        
+        # Çerezleri temizleme
+        response.delete_cookie(settings.SIMPLE_JWT['AUTH_COOKIE'])
+        response.delete_cookie("refresh_token")
+        
+        # Çıkış işlemi tamamlandı
         return response
+
     
 class CreateWork(APIView):
     permission_classes = [IsAuthenticated]
