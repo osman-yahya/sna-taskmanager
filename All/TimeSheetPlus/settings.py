@@ -188,7 +188,7 @@ SIMPLE_JWT = {
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # React Geliştirme Ortamı
-    "https://yourfrontenddomain.com",  # Yayındaki domainin
+    "https://timesheetplus.netlify.app/",  # Yayındaki domainin
 ]
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS.copy()
 
