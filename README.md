@@ -128,6 +128,16 @@
 
 **Method:** `POST`
 
+### Toggle Users Manager Role
+**Endpoint:** `/api/users/toggle`
+
+**Method:** `POST`
+```json
+{
+    "id": ""
+}
+```
+
 ---
 
 ## Admin Credentials
