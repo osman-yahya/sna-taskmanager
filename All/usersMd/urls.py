@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
-from .views import LoginView, SignupView,SignoutView, CreateWork,GetWorks,GetAllUsers,GetAllWorks,DeleteWork,DeleteWorkasManager,GetCredentials
+from .views import LoginView, SignupView,SignoutView, CreateWork,GetWorks,GetAllUsers,GetAllWorks,DeleteWork,DeleteWorkasManager,GetCredentials,ToggleUsersManagerRole
 
 urlpatterns = [
     path('login', LoginView.as_view(), name='login'),
@@ -14,6 +14,7 @@ urlpatterns = [
     path('work/getall', GetAllWorks.as_view(), name='getall_work'),  
     path('users/getall', GetAllUsers.as_view(), name='getall_users'),  
     path('users/get', GetCredentials.as_view(), name='get_user'),  
+    path('users/toggle', ToggleUsersManagerRole.as_view(), name='toggle_user'),  
     path('work/delete', DeleteWork.as_view(), name='delete_work'),  
     path('work/forcedelete', DeleteWorkasManager.as_view(), name='delete_asMan_work'),  
 

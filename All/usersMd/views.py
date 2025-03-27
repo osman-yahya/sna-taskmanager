@@ -14,7 +14,7 @@ from rest_framework.exceptions import AuthenticationFailed
 
 from rest_framework.permissions import IsAuthenticated, BasePermission
 class IsManager(BasePermission):
-    def has_permission(self, request):
+    def has_permission(self, request, view):
         return request.user and request.user.isManager
 
 
@@ -168,7 +168,14 @@ class GetAllUsers(APIView):
 
         return Response(serializer.data)
         
+class ToggleUsersManagerRole(APIView):
+    permission_classes = [IsAuthenticated, IsManager]
 
+    def post(self,request):
+        user = User.objects.get(id=request.data.get("id"))
+        user.isManager = not user.isManager
+        user.save()
+        return Response({"message" : "users role toggled."})
 
 
 

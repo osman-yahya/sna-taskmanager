@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'password']
+        fields = ['id','username', 'email', 'first_name', 'last_name', 'password','isManager']
 
     def create(self, validated_data):
         # Kullanıcıyı oluştur ve şifreyi hash'le
